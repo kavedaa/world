@@ -54,7 +54,7 @@ object CurrencyImporter extends LazyLogging {
 
   def importAll()(implicit c: -:[WorldDB]) = {
 
-    logger info "Importerer currencies..."
+    logger info "Importing currencies..."
     
     val currencies = fromWeb flatMap (_.toCurrency)
     val distinctCurrencies = currencies groupBy (_.alphaCode) map { case (alphaCode, currencies) => currencies.head }
