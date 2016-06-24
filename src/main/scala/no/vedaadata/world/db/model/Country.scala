@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 /**
  *  Landkoder basert på ISO 3166.
- *  Kan importeres fra http://data.okfn.org/data/core/country-codes
+ *  Kan importeres fra https://raw.githubusercontent.com/datasets/country-codes/master/data/country-codes.csv
  *  (og evt. ISO offisiell)
  */
 case class Country(

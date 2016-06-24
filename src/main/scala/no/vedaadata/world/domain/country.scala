@@ -27,10 +27,10 @@ object CountryImporter extends LazyLogging {
   def fromRow(elems: Array[String]) = {
 
     val name = elems(0)
-    val alpha2Code = elems(2)
-    val alpha3Code = elems(3) match { case c if c.nonEmpty => Some(c); case _ => None }
-    val numericCode = Try(elems(4).toInt).toOption
-    val currencyCode = elems(14) match { case c if c.nonEmpty => Some(c); case _ => None }
+    val alpha2Code = elems(3)
+    val alpha3Code = elems(4) match { case c if c.nonEmpty => Some(c); case _ => None }
+    val numericCode = Try(elems(5).toInt).toOption
+    val currencyCode = elems(15) match { case c if c.nonEmpty => Some(c); case _ => None }
 
     CountryT(alpha2Code, alpha3Code, numericCode, name, None, None, currencyCode, None)
   }
