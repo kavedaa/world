@@ -33,16 +33,19 @@ object LanguageImporter extends LazyLogging {
   def importAll()(implicit c: -:[WorldDB]) = {
 
     logger info "Importing languages..."
-    
+
     val languages = fromWeb
-    
+
     val results = languages map { language =>
-      Try { WorldDB.World.Language += language } recoverWith { case ex =>
-        logger error s"Could not import $language: ${ex.getMessage}"
-        new Failure(ex)
+      val res = Try { WorldDB.World.Language insertOrUpdate language }
+      res match {
+        case Success(Left(_))  => logger info s"Inserted ${language.defaultName}"
+        case Success(Right(_)) => logger info s"Updated ${language.defaultName}"
+        case Failure(ex)       => logger info s"Could not import language: ${ex.getMessage}"
       }
+      res
     }
-    
+
     val successes = results filter (_.isSuccess)
 
     logger info s"Imported ${successes.size} of ${languages.size} languages."

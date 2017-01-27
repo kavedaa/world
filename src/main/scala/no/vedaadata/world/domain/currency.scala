@@ -55,16 +55,18 @@ object CurrencyImporter extends LazyLogging {
   def importAll()(implicit c: -:[WorldDB]) = {
 
     logger info "Importing currencies..."
-    
+
     val currencies = fromWeb flatMap (_.toCurrency)
     val distinctCurrencies = currencies groupBy (_.alphaCode) map { case (alphaCode, currencies) => currencies.head }
 
     val results = distinctCurrencies map { currency =>
-      Try { WorldDB.World.Currency += currency } recoverWith {
-        case ex =>
-          logger error s"Could not import $currency: ${ex.getMessage}"
-          new Failure(ex)
+      val res = Try { WorldDB.World.Currency insertOrUpdate currency }
+      res match {
+        case Success(Left(_))  => logger info s"Inserted ${currency.defaultName}"
+        case Success(Right(_)) => logger info s"Updated ${currency.defaultName}"
+        case Failure(ex)       => logger info s"Could not import $currency: ${ex.getMessage}"
       }
+      res
     }
 
     val successes = results filter (_.isSuccess)

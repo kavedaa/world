@@ -31,22 +31,25 @@ object CountryImporter extends LazyLogging {
     val alpha3Code = elems(4) match { case c if c.nonEmpty => Some(c); case _ => None }
     val numericCode = Try(elems(5).toInt).toOption
     val currencyCode = elems(15) match { case c if c.nonEmpty => Some(c); case _ => None }
+    val continentCode = elems(22) match { case c if c.nonEmpty => Some(c); case _ => None }
 
-    CountryT(alpha2Code, alpha3Code, numericCode, name, None, None, currencyCode, None)
+    CountryT(alpha2Code, alpha3Code, numericCode, name, None, None, currencyCode, None, continentCode)
   }
 
   def importAll()(implicit c: -:[WorldDB]) = {
 
     logger info "Importing countries..."
-    
+
     fromWeb foreach { countries =>
 
       val results = countries map { country =>
-        Try { WorldDB.World.Country += country } recoverWith {
-          case ex =>
-            logger error s"Could not import $country: ${ex.getMessage}"
-            new Failure(ex)
+        val res = Try { WorldDB.World.Country insertOrUpdate country }
+        res match {
+          case Success(Left(_))  => logger info s"Inserted ${country.name}"
+          case Success(Right(_)) => logger info s"Updated ${country.name}"
+          case Failure(ex)       => logger info s"Could not import $country: ${ex.getMessage}"
         }
+        res
       }
 
       val successes = results filter (_.isSuccess)

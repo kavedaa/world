@@ -13,6 +13,7 @@ trait CountryMapper extends DualPKMapper[Country, CountryT, String] with TableDe
   val expires = new date("expires") with nullable
   val currencyCode = new char(3)("currencyCode") with nullable
   val defaultLanguageCode = new char(3)("defaultLanguageCode") with nullable
+  val continentCode = new char(2)("continentCode") with nullable
 
   def currencyTable: CurrencyMapper
   def languageTable: LanguageMapper
@@ -25,7 +26,7 @@ trait CountryMapper extends DualPKMapper[Country, CountryT, String] with TableDe
     def tableName = languageTable.tableName
   }
 
-  def fields = Seq(alpha2Code, alpha3Code, numericCode, name, validFrom, expires, currency, defaultLanguage)
+  def fields = Seq(alpha2Code, alpha3Code, numericCode, name, validFrom, expires, currency, defaultLanguage, continentCode)
 
   val (pk, pkf) = PK(alpha2Code, _.alpha2Code)
 
@@ -38,7 +39,8 @@ trait CountryMapper extends DualPKMapper[Country, CountryT, String] with TableDe
       validFrom.read map (_.toLocalDate),
       expires.read map (_.toLocalDate),
       currency.read,
-      defaultLanguage.read),
+      defaultLanguage.read,
+      continentCode.read),
     c => Seq(
       alpha2Code := c.alpha2Code,
       alpha3Code := c.alpha3Code,
@@ -47,10 +49,16 @@ trait CountryMapper extends DualPKMapper[Country, CountryT, String] with TableDe
       validFrom := c.validFrom map java.sql.Date.valueOf,
       expires := c.expires map java.sql.Date.valueOf,
       currencyCode := c.currencyCode,
-      defaultLanguageCode := c.defaultLanguageCode))
+      defaultLanguageCode := c.defaultLanguageCode,
+      continentCode := c.continentCode))
 
+  def continentTable: ContinentMapper
+
+  val fkContinent = ForeignKey(continentCode) references continentTable(_.code)
+  
   def constraints = Seq(
     PrimaryKey(alpha2Code),
     ForeignKey(currencyCode) references currencyTable(_.alphaCode),
-    ForeignKey(defaultLanguageCode) references languageTable(_.alpha3Code))
+    ForeignKey(defaultLanguageCode) references languageTable(_.alpha3Code),
+    fkContinent)
 }

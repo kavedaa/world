@@ -11,14 +11,21 @@ trait WorldSchema extends SchemaLike {
   object Currency extends Table("Currency") with CurrencyMapper
   object Language extends Table("Language") with LanguageMapper
 
+  object Continent extends Table("Continent") with ContinentMapper
+
   object Country extends Table("Country") with CountryMapper {
     def currencyTable = Currency
     def languageTable = Language
+    def continentTable = Continent
   }
 
   def createTables()(implicit c: -:[D]) {
     Currency create ()
     Language create ()
+
+    Continent create ()
+    model.Continent.items foreach Continent.insertOrUpdate
+
     Country create ()
   }
 }
@@ -78,5 +85,5 @@ object SampleData {
     Currency("USD", Some(840), "US Dollar", Some(2)))
 
   val sampleCountryData = Seq(
-    CountryT("NO", Some("NOR"), Some(578), "Norway", None, None, Some("NOK"), Some("nor")))
+    CountryT("NO", Some("NOR"), Some(578), "Norway", None, None, Some("NOK"), Some("nor"), Some("EU")))
 }
