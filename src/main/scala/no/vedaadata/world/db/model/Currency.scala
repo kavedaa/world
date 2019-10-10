@@ -12,3 +12,12 @@ case class Currency(
   
   def codeAndName = s"$alphaCode - $defaultName"
 }
+
+object Currency {
+
+  //  default ordering
+
+  implicit object CurrencyOrdering extends Ordering[Currency] {
+    def compare(a: Currency, b: Currency) = a.defaultName compare b.defaultName
+  }
+}
