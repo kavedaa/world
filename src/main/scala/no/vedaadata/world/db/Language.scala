@@ -29,9 +29,5 @@ trait LanguageMapper extends PKMapper[Language, String] with TableDefinition {
       languageType := l.languageType,
       name := l.defaultName))
       
-  val uqAlpha2 = Unique(alpha2Code)
-
-   def constraints = Seq(
-     PrimaryKey(alpha3Code),
-     uqAlpha2)
+   def constraints = Seq(PrimaryKey(alpha3Code))
 }
