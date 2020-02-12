@@ -7,13 +7,17 @@ import no.vedaadata.world.db.WorldDB
 import com.typesafe.scalalogging.LazyLogging
 import scala.util._
 
-//	Import av data fra http://www-01.sil.org/iso639-3/iso-639-3.tab (tab-separert format)
+//	Import av data fra https://iso639-3.sil.org
 
 object LanguageImporter extends LazyLogging {
 
+  //  as of 2020, this link redirects, and then returns 403 when called programmatically
+  //  so download manually and import from file instead
   def fromWeb = fromURL(new URL("http://www-01.sil.org/iso639-3/iso-639-3.tab"), "UTF-8")
 
   def fromURL(url: URL, enc: String) = fromTabSepLines((io.Source fromURL (url, enc)).getLines.toList.tail)
+
+  def fromFile(path: String, enc: String) = fromTabSepLines((io.Source fromFile (path, enc)).getLines.toList.tail)
 
   def fromTabSepLines(lines: Seq[String]) = lines map fromTabSep
 
@@ -30,11 +34,9 @@ object LanguageImporter extends LazyLogging {
     Language(alpha3Code, alpha2Code, languageScope, languageType, defaultName)
   }
 
-  def importAll()(implicit c: -:[WorldDB]) = {
+  def importAll(languages: Seq[Language])(implicit c: -:[WorldDB]) = {
 
     logger info "Importing languages..."
-
-    val languages = fromWeb
 
     val results = languages map { language =>
       val res = Try { WorldDB.World.Language insertOrUpdate language }
