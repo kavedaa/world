@@ -8,6 +8,11 @@ portal-db.properties
 mail.conf
 logback.xml
 
+.bloop/
+.metals/
+
+project/metals.sbt
+
 # sbt specific
 .cache
 .cache-main
