@@ -10,7 +10,7 @@ import no.vedaadata.world.db.WorldDB
 import scala.util._
 import com.typesafe.scalalogging.LazyLogging
 
-//	Import av data fra http://http://www.currency-iso.org/dam/downloads/lists/list_one.xml (XML-format)
+//	Import av data fra https://www.currency-iso.org (XML-format)
 
 case class CurrencyEntry(
   countryName: String,
@@ -27,7 +27,7 @@ case class CurrencyEntry(
 
 object CurrencyImporter extends LazyLogging {
 
-  def fromWeb = fromURL(new URL("http://www.currency-iso.org/dam/downloads/lists/list_one.xml"))
+  def fromWeb = fromURL(new URL("https://www.currency-iso.org/dam/downloads/lists/list_one.xml"))
 
   def fromURL(url: URL) = fromXml(XML load url)
 
