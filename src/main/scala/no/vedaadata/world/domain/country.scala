@@ -1,12 +1,16 @@
 package no.vedaadata.world.domain
 
-import java.net.URL
 import scala.util._
-import no.vedaadata.world.db.model._
-import com.bizo.mighty.csv.CSVReader
+
+import java.net.URL
 import org.shaqal._
-import no.vedaadata.world.db.WorldDB
+
 import com.typesafe.scalalogging.LazyLogging
+import com.github.tototoshi.csv._
+
+import no.vedaadata.world.db.model._
+import no.vedaadata.world.db.WorldDB
+import scala.io.Source
 
 //  Import av data fra https://raw.githubusercontent.com/datasets/country-codes/master/data/country-codes.csv
 
@@ -16,15 +20,17 @@ object CountryImporter extends LazyLogging {
 
   def fromURL(url: URL, enc: String) = Try {
 
-    val conn = url.openConnection
-    val inputStream = conn.getInputStream
-    val rows: Iterator[Array[String]] = CSVReader(inputStream)
-    val countries = rows.toSeq drop 1 map fromRow
+//    val conn = url.openConnection
+    //val inputStream = conn.getInputStream
+    val source = Source fromURL url
+    val reader = CSVReader open source
+    val rows = reader.all
+    val countries = rows drop 1 map fromRow
     //    inputStream close()
     countries
   }
 
-  def fromRow(elems: Array[String]) = {
+  def fromRow(elems: Seq[String]) = {
 
     val name = elems(0)
     val alpha2Code = elems(3)
