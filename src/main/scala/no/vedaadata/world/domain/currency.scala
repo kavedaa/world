@@ -52,11 +52,11 @@ object CurrencyImporter extends LazyLogging {
       (currencyNameNode \ "@IsFund").text == "true")
   }
 
-  def importAll()(implicit c: -:[WorldDB]) = {
+  def importAll(entries: Seq[CurrencyEntry])(implicit c: -:[WorldDB]) = {
 
     logger info "Importing currencies..."
 
-    val currencies = fromWeb flatMap (_.toCurrency)
+    val currencies = entries flatMap (_.toCurrency)
     val distinctCurrencies = currencies groupBy (_.alphaCode) map { case (alphaCode, currencies) => currencies.head }
 
     val results = distinctCurrencies map { currency =>
