@@ -53,9 +53,9 @@ trait CountryMapper extends DualPKMapper[Country, CountryT, String] with TableDe
       continentCode := c.continentCode))
 
   def continentTable: ContinentMapper
+ 
+  def fkContinent = ForeignKey(continentCode) references continentTable(_.code)
 
-  val fkContinent = ForeignKey(continentCode) references continentTable(_.code)
-  
   def constraints = Seq(
     PrimaryKey(alpha2Code),
     ForeignKey(currencyCode) references currencyTable(_.alphaCode),

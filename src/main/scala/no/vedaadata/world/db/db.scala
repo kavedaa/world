@@ -20,13 +20,13 @@ trait WorldSchema extends SchemaLike {
   }
 
   def createTables()(implicit c: -:[D]) {
-    Currency create ()
-    Language create ()
+    Currency.create()
+    Language.create()
 
-    Continent create ()
+    Continent.create()
     model.Continent.items foreach Continent.insertOrUpdate
 
-    Country create ()
+    Country.create()
   }
 }
 
@@ -36,8 +36,8 @@ trait WorldDB extends Database {
 
   def create(insertSampleData: Boolean = false)(implicit c: -:[D]) {
 
-    World create ()
-    World createTables ()
+    World.create()
+    World.createTables()
 
     if (insertSampleData) {
       World.Language ++= SampleData.sampleLanguageData

@@ -71,6 +71,6 @@ object CurrencyImporter extends LazyLogging {
 
     val successes = results filter (_.isSuccess)
 
-    logger info s"Imported ${successes.size} of ${currencies.size} currencies."
+    logger info s"Imported ${successes.size} of ${distinctCurrencies.size} currencies."
   }
 }
