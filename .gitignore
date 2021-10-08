@@ -10,8 +10,10 @@ logback.xml
 
 .bloop/
 .metals/
+metals.sbt
 
-project/metals.sbt
+.vscode/
+.VSCodeCounter/
 
 # sbt specific
 .cache

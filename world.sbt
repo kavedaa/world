@@ -2,7 +2,7 @@ name := "world"
 
 organization := "no.vedaadata"
 
-version := "1.0.6"
+version := "1.0.7"
 
 scalaVersion := "2.13.4"
 

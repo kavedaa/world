@@ -27,7 +27,8 @@ case class CurrencyEntry(
 
 object CurrencyImporter extends LazyLogging {
 
-  def fromWeb = fromURL(new URL("https://www.currency-iso.org/dam/downloads/lists/list_one.xml"))
+//  def fromWeb = fromURL(new URL("https://www.currency-iso.org/dam/downloads/lists/list_one.xml"))
+  def fromWeb = fromURL(new URL("https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list_one.xml"))
 
   def fromURL(url: URL) = fromXml(XML load url)
 
