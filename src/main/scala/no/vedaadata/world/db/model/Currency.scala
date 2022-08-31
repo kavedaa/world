@@ -10,14 +10,10 @@ case class Currency(
   defaultName: String,
   minorUnits: Option[Int]) {
   
-  def codeAndName = s"$alphaCode - $defaultName"
+  def render = s"$alphaCode - $defaultName"
 }
 
 object Currency {
 
-  //  default ordering
-
-  implicit object CurrencyOrdering extends Ordering[Currency] {
-    def compare(a: Currency, b: Currency) = a.defaultName compare b.defaultName
-  }
+  implicit val currencyOrdering: Ordering[Currency] = Ordering.by(_.alphaCode)
 }
