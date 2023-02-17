@@ -19,7 +19,7 @@ trait WorldSchema extends SchemaLike {
     def continentTable = Continent
   }
 
-  def createTables()(implicit c: -:[D]) {
+  def createTables()(implicit c: -:[D]) = {
     Currency.create()
     Language.create()
 
@@ -34,7 +34,7 @@ trait WorldDB extends Database {
 
   object World extends Schema("World") with WorldSchema with SchemaDefinition
 
-  def create(insertSampleData: Boolean = false)(implicit c: -:[D]) {
+  def create(insertSampleData: Boolean = false)(implicit c: -:[D]) = {
 
     World.create()
     World.createTables()

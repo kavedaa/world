@@ -24,7 +24,7 @@ object CountryImporter extends LazyLogging {
     //val inputStream = conn.getInputStream
     val source = Source.fromURL(url, enc)
     val reader = CSVReader open source
-    val rows = reader.all
+    val rows = reader.all()
     val countries = rows drop 1 map fromRow
     //    inputStream close()
     countries
