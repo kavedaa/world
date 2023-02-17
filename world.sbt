@@ -4,7 +4,7 @@ organization := "no.vedaadata"
 
 version := "1.0.10"
 
-scalaVersion := "3.2.2"
+scalaVersion := "2.13.10"
 
 crossScalaVersions := Seq("2.13.10", "3.2.2")
 
