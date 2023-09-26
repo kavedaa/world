@@ -19,7 +19,10 @@ trait WorldSchema extends SchemaLike {
     def continentTable = Continent
   }
 
+  object Subdivision extends Table("Subdivision") with SubdivisionMapper
+
   def createTables()(implicit c: -:[D]) = {
+    
     Currency.create()
     Language.create()
 
@@ -27,6 +30,7 @@ trait WorldSchema extends SchemaLike {
     model.Continent.items foreach Continent.insertOrUpdate
 
     Country.create()
+    Subdivision.create()
   }
 }
 

@@ -2,9 +2,9 @@ name := "world"
 
 organization := "no.vedaadata"
 
-version := "1.0.12"
+version := "1.0.14"
 
-scalaVersion := "3.2.2"
+scalaVersion := "2.13.10"
 
 crossScalaVersions := Seq("2.13.10", "3.2.2")
 
