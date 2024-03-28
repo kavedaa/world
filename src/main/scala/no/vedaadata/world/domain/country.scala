@@ -3,6 +3,7 @@ package no.vedaadata.world.domain
 import scala.util._
 
 import java.net.URL
+import java.io.File
 import org.shaqal._
 
 import com.typesafe.scalalogging.LazyLogging
@@ -14,15 +15,30 @@ import scala.io.Source
 
 //  Import av data fra https://raw.githubusercontent.com/datasets/country-codes/master/data/country-codes.csv
 
+//  TODO should check out alternative sources as this source is not quite up to date
+//  (as evidenced by the fix methods)
+
 object CountryImporter extends LazyLogging {
 
   def fromWeb = fromURL(new URL("https://raw.githubusercontent.com/datasets/country-codes/master/data/country-codes.csv"), "UTF-8")
 
-  def fromURL(url: URL, enc: String) = Try {
+  def fromFile(file: File) =
+    for {
+      source <- Try(Source.fromFile(file, "UTF-8"))
+      countries <- fromSource(source)
+    } yield countries
+
+
+  def fromURL(url: URL, enc: String) =
+    for {
+      source <- Try(Source.fromURL(url, enc))
+      countries <- fromSource(source)
+    } yield countries
+
+  def fromSource(source: Source) = Try {
 
 //    val conn = url.openConnection
     //val inputStream = conn.getInputStream
-    val source = Source.fromURL(url, enc)
     val reader = CSVReader open source
     val rows = reader.all()
     val countries = rows drop 1 map fromRow
@@ -32,9 +48,17 @@ object CountryImporter extends LazyLogging {
 
   def fromRow(elems: Seq[String]) = {
 
-    val name = elems(41)
+    val name = elems(41) match {
+      case n if n.nonEmpty => n
+      case _ => elems(54)
+    }
 
-    val alpha2Code = elems(9)
+    def fixAlpha2Code(code: String, name: String) = name match {
+      case "Sark" => "CQ"
+      case _ => code
+    }
+
+    val alpha2Code = fixAlpha2Code(elems(9), name)
 
     val alpha3Code = elems(2) match { 
       case c if c.nonEmpty => Some(c)
@@ -43,9 +67,11 @@ object CountryImporter extends LazyLogging {
 
     val numericCode = Try(elems(5).toInt).toOption
 
-    //  wrong code for Venezuela in file
+    //  some codes in the file are outdated
     def fixCurrencyCode(c: String) = c match {
-      case "VEF" => "VES"
+      case "VEF" => "VES"   //  for Venezuela
+      case "HRK" => "EUR"   //  for Croatia
+      case "SLL" => "SLE"   //  for Sierra Leone
       case x => x
     }
 
