@@ -9,4 +9,6 @@ package no.vedaadata.world.db.model
 case class Subdivision(
   subdivisionCode: String,
   countryCode: String,
-  subdivisionName: String)
+  subdivisionName: String) {
+  def render = s"$countryCode: $subdivisionName"
+}
