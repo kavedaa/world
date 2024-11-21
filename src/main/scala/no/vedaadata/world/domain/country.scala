@@ -80,7 +80,7 @@ object CountryImporter extends LazyLogging {
       case _ => None
     }
 
-    val continentCode = elems(50) match { 
+    val continentCode = elems(49) match { 
       case c if c.nonEmpty => Some(c)
       case _ => None
     }

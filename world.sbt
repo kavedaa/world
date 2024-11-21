@@ -2,11 +2,9 @@ name := "world"
 
 organization := "no.vedaadata"
 
-version := "1.0.16.4"
+version := "1.0.16.5"
 
-scalaVersion := "3.3.1"
-
-crossScalaVersions := Seq("2.13.13", "3.3.1")
+scalaVersion := "3.3.3"
 
 resolvers += "Vedaa Data Public" at "https://mymavenrepo.com/repo/UulFGWFKTwklJGmfuD8D/"
 
